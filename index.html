@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ADA — Asistente De Aceleradores</title>
+<link rel="manifest" href="data:application/json,{}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#100818;
+  --surface:#1a1028;
+  --surface2:#251a3a;
+  --border:#2e1f47;
+  --lavender:#c4b0e8;
+  --lavender-soft:#d8c9ee;
+  --lavender-bright:#b59df0;
+  --accent:#f5a15c;
+  --accent2:#e88838;
+  --accent3:#b59df0;
+  --warn:#f59e0b;
+  --danger:#ef4444;
+  --success:#10b981;
+  --text:#ece4f5;
+  --text2:#a89bc7;
+  --text3:#6b5f85;
+  --radius:12px;
+}
+
+html,body{height:100%;font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;}
+body{background-image:radial-gradient(ellipse at 20% 0%, rgba(139,92,246,0.08) 0%, transparent 50%),radial-gradient(ellipse at 80% 100%, rgba(245,161,92,0.05) 0%, transparent 50%);}
+
+.app{display:flex;flex-direction:column;height:100%;height:100dvh;max-width:900px;margin:0 auto;}
+
+.header{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;}
+.header-icon{width:48px;height:48px;border-radius:50%;background-image:url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQDAwMEBAQFBgoGBgUFBgwICQcKDgwPDg4MDQ0PERYTDxAVEQ0NExoTFRcYGRkZDxIbHRsYHRYYGRj/2wBDAQQEBAYFBgsGBgsYEA0QGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBj/wAARCADAAL4DASIAAhEBAxEB/8QAHAAAAQQDAQAAAAAAAAAAAAAABgAEBQcCAwgB/8QARxAAAQMDAgMEBwYEBAQEBwAAAQIDBAAFEQYhEjFBBxNRYSIyUnGBkaEUI0JiscEVcqLwM0OCkhZTstEIJTThJCYnRFRz8v/EABsBAAIDAQEBAAAAAAAAAAAAAAMEAAIFAQYH/8QAOhEAAQMCAwQJAgUDBAMAAAAAAQACAxEhBBIxQVFhcQUTIoGRobHB8NHhFCMyQmIGUnIVFjPxgpLC/9oADAMBAAIRAxEAPwDv6lSpVFEqVKlUUSpUqVRRKlTSXcYsMHvXBxAZ4Rz+PhQZd+0SHHUpuMvvFDoyc496jt8qqHFzsrBU8ERkTnaI8W422nLi0pH5jimjl0htjPeFQ8QNvnVUO6g1JdEl6O2IzJ/zVYA/3r/aox/u3V8VyvheV1SyFPfU4TRRh5XakDlVx8kwMMNpVtPartTJIXJYT/M6kU1VrizJP/rI/wAFE/tVVhdmb5MTnfNTiWx9Aad2652SNPS49aSpAB3L3eEf6TgGiHBODSauPcB6q/UM3Ky0a2syzj7ZH+KyP1FPWdS2x/8Aw32lfyOJV+9VC7Ns7j61JtSkJKiQESSMD3YIrD/yVf4ZzB8fQcH7Gu/gnUqC4cwD6KGBm5Xe3cIrmPveHPtDFOQpKhlJBHiKpKMuSyf/ACq/Jz0bcWpkn4K9H61KsasvlpcSLlEUUnk4PQJ9xHomhGCVtgQ7yPgUN2GGwq2aVCVn1vAuBS2pwBw/gX6C/wDsfhRQzIZkI4mlhXiOo+FBz3ymx3FLvjc3VbaVKlV1RKlSpVFEqVKlUUSpUqVRRKlSrVIkMxY6n31hKE9f2rhIAqVAK2CzccQ02XHFhKUjJJPKgvUmuYttbLTKzxkeilPrq8/yjzNDusNdOKkKgwDl0HGBuGz5+0ry6UFud3BcU9cj9rnqPEWFnKWz4uHqfyj4+FEhw7pqOdZp0G0/QcU9HAG3dqpOZcLre2jJmSUw4BOxJPCryA5uH6e6srfeI1uZeiW63uSVvDAcdwVKV09EA7eVMEx3pSU3K9y1MMKHoZGXHB4No6Dz2FZm6Kaa7q2tptzCvRLnFl1z3r/YYp4QNc3qmtqNwsB36k/LI5snL0CWtQevlxRGV7L6y458EDl9KSV2Rr/CiTJyvadWGkfJOT9aYLQ1FjOyX8kISVqUdycVlEeuzzDctnS12cjqAWlxLYPEnnkeNMmMNH5j6DhYfXzVc1dFJouDiSBGs9sZ8Mtd4f6ia3fxW7J9VUVHkmMgftTO2Ps3CGzLZSoIWfVVsQQcEGnPAlbriUqSShWFAHJSfA1b8PFtbXndUL1l/Fboo+mIbvkuMg/tWtU9C9pNkgOebQU0fof2rYGcHl0P6VipkYRlIwfPzqfh4tgpyt6KB61EWOQccUy3qPRYDyPmMGt0di6W8CRAdROiJIUtMdfGhQ8FI5j5U2W0CMEVo7p2O930Z1bLiD67asGqvw5IoDUbjf7qwcn1wuNvvEwvPNrgu4CUuJPGk49oAAj3j5U9g6hu9idaEomTGV/hupXxZH5V9fcfpUWqdHmejeY/3h2E2OkBY/mTyV9DWC0TLUgLQpqZb3jjiHpNOeRHNKvkRSpgZlETm8gf/kq2qt2yanhXWOlQeSenFywfBQ6H6VPjcVQbLi4yjc7I6sBsZdYUcqbHn7SPPp1xViaT1kzcGAw+eBaR6SCclHmPFP6UhLE6C+rfMc/qlpYNrEcUq8SQpIUkggjIIr2uJRKlSpVFEqVKlUUWDrjbLKnXVhKEjKlHoKqbW2snpE9Fqt7nC84oITk7NBRwCfzHPwFTPaFq1FuhqjMKClA8KU+25/2TzPnVStuqgx/4pIUVz5OVMce5QOrp8+YT8T0FEw8HXnOf0iwG8/QbU/BFlGY6qTnRF6YWhsuB6e8kqS+AcNJzj0Qd+InO/TpvWtDLNoCXZzQkXFfpNxF7pazyU54nqE/OtDDirbHauMrifuL6cxW3SVd2n/mqz/SPjUZcZrsCEXkhUqfJcDbSTupxxX6+NakUbnDtOqNp0ry3AI5Kf3KVLTDlXV8mXJQgr9M7bdPcPCpzT2hLffLAzd77cHpzsxnvGUsqLbccKG3COqh57bVCKsHaAlsW9ca1vpkANqmNuY7kHmVJPPAzyFFyrnaezrSMO1rkOzHG0ENNkgLcySST7Kck/pvWf0hi87WRYJ1XE6Dd7KNaRXMotOg9VzY7tqnXaA3CB7tL4QVuvIzsSOnzq0orIjRWWG0HgaQlCdugAA/SqLuGvtQXVZ7uaYrJ5MxDw/Aq5mnP2VhuWi3T9STmbuvAUMksMrPJta+LOdwCQMAn30LE4LEThv4l4HACvNcoNiKZei9UW52ULBOgOxn3lrQy+koWxxHmDyOP25U6V2ZQotoQ5Bu0qNd20lbk8qKkvK5njR7P971Wz/aFrHTFxVbowly5DZIWzL9NpGCQQSd85HQioG6ay17f1qRdtRSYrDmR9lgJDDeD0yNz8SaHjJcThg10soDRtAN+dlZkRebK2NMzHbpYm505sIKitKVNcnANuLB5A71Id0oFJ4Nh14ciqNh2CzrbSJVyklXIJQpayPLoKlW9KpjpD1uu13hkbhaXy39Can+6MFWhr4Lh6Pk2FWopnatT8ZWXFBJwFYyU4qv4t119ayC1Kav8ZPNuS3wu48lp6+8miiw67td+dVal99brhn04Mr0VKP5T+L6HyrYwmPgxQzQvB9fBLviki/UE9UwVI2BPP6VoYkSLctSmQlxlzZ1hwZQ4PAj9+dSimgMghOMHc+6mT7CksBZScEkA4ptzWvGVwUZJVanWg2gXiyuOJbbP3jZOVxyeh9pJ8fgacR4TsuG5qC1OJhuxslxkcgoDJKfAEdD7qjkPvwJv2qKQFpyFJIylaTzSR1B8KykqVES3eLM4tuKtYC2s5DK/YUOqT0zzG1JSxvFGg8idv8T7H4Tgqz9F6uauUQMvKCFJwFoz6hPUflP0o56VzqmUbbMYvlrThhauFbOdkK/E2fIjcHw91XVpW+s3e1NlDnFlPEgnmR4HzB2NZcsXUOAH6TpwO76JWeL94RBSpUq4lEqjL9cxbLOt4LCXVeijPQ9T8BvUnVQdqt/cUs22KolbivsyAn+s/HZNVcC4iNupt9T3BGgjzuvoECTZyNQaielyFr/h8ZJUd9ygHkPzLP6+Vaoi0zJsm9XNAMWPglsbBauSGk+W3yFaLjEk2mBHtLjRTIfPfuhO/Ec8KEAjnjf4qrbP4UOs2VpWW4Q4nyOS3z63y9X4GtqJrS1rItDYf4jU8yVom2q9QuRMluzpR4nnTxHoEjoAPDHSmtyblWy6QtVR0IkotoUpyK5sCk81JPRQB+gqTithQWSQMJzyz1HyqDtFuvmubO++7e2YFrcecY+zsx+Ja0pPVRPupjFPhghPW2bp9kNgc49lWidQwW9GjUmFiKY4fShY4VHPqpx4k4FVTbrrJuF1vF8l93InNxVPtB1IWlBCkgkJO3opJwPjRH2kyRA0Pb7ZHyG1PJbwPZbRsPnig2JLgaZuCTIZcnzwkpfYC+BltKk4UgnmtWDvyAPjWF0VAwQOkYKucbch8ujyE5qIi05flTL4l27woM1mK05MU4phLbiO7TxDCkgdQBg5G9bf4BGucR3UrdzeFqVxuvqeaKpKFZ9IBI2Xur1weHxxTi2XE2Zi6XhqJbxZkxQqImMyhDj4UtIwScnbPCrPU+6s4MjtGumn3tTw7rHZjIStxEJCUD7scwlPDjh2OxO+KP1xDi+OjBYXPfSlDf0VCDtWN91C20YF0s8KK2bhH7xUqQ0l59S0EtnJOUg+iCeEdaHtXyUStE267zW2kzHXXULW0gNl9CFJCVEJwM5KhnrjyoyN1uOqNNWy4W+DaA2HnWpzUxhtbbSRwkuJyAQ2M5ODkE9dqHrvK0pq2Y3aRHctrTOI8B4KKmCniJTxo5o4lEniBOM70ORhlgdEGXoQdtNQK7fXSq6w5XAlDGmIeodQPYtKG4ENJ4XJzic48k+J8h8as+JE0jo6L9qvNwEiQACp2arvFkn2WxsM9ABQPL1Hdmnhpy2RBaPso7qS+gA92QSChkcs7Hc8qaoixG1Fx9SzkFSnVqKl8P4jxHfJ6q5nlXgsRlwrzGRVw1WmBnFa2R25232hCltWnT1zlob2U4sojoT785x8cUO3/tK0Vq+N/D9R6WmR3f8AKnRHm1usK8UnY/DkaDLLY7x2kavNnsRTCtsU/fSAn7uOnwSPxLPjV3wexDs7iWr7JIs65zxThcyQ+vvSfEEEBPwFbGEw0rQJZH5DsAFT36USkpjbalUCaY1ilm8o0veLmmcV4EG5KSW1PDoh1J3Sv9fE5BJ5IKFwm45yFJWTknbeqk7Q9AStFKQy487OsclfDCuLn+NBd5htwjmD0PXyI3LtC6jXqTSI+1rzcYSvs0rPNRHqr+I+oNex6Oxb5hkl/UNo0I3j3GwrPnjDO2zQqUntd1LcbCuMJURkdaaRpCYExffNlyE+O6kNZ5p8R5jmKfykZUo/HYVGSE+sDjrtitN8Ye3KV2N1VkUJtV2et0xzjgyUgF0cig7odT5jn8xUxo+7ybBqhdokKAPeegc7cfl5KH7VCbz9POxVbyrcC634rZJ9JP8ApO/uJpCLNudhaukVtReg5adXnBKUjiQoeJSNj5AVmzMD2FkppsJ4/tPf9kVdHxn25MVuQ0cpWnIrbQboG+putlRlQ4lp48eChssfPf40ZVksJIo7UWPNZsrMjiE1uUsQbTIln/LQVDzPT61zZepKrt2hJZW6ruo6sLWDyCfTWr9avPXk9MPTYSpWAtfEr+VIKj+1c4w5CvsF1uDh+8cSGQfNxWVf0pPzprBNzSPduAA5uTeGbRld/spSNdX514kX+eorTBbLraCNgonDafmc/CtFvaWWO9UrK1hS1qKtz/eaar+60pHYHrTpRWr+RsYH1UflUhG3BB29bHoc+VbmGjaC4tFBoOQ+9UV5UnFB9IAnBTvg4yMihyBM1JoS0SUO2ePPs7LrkgvsP8LiEqPUH4dKJW2+B9beSQkkZIwfl0qC1hPnP3SDouOBERdUKD010Zwges2ge0QOviKmNhiliImFWi6FE94fRicdpChP0Zb7lHJU0l5K8/lcRsf0oQiKg6jmpE1b0SYEFb0ltIW24lAypShzSrA5jYnG1WO5aoT2j/8AhziWIwYDCFLPEpOPVVnqQQDVVxoztrn3SzzXG40tyOWULcVwoJ4kq9boFAHBrA6KnY6B0bDRzSab6H5dPzMIcCdCjK3vN3Nu5203KAbO5GAjNRnR3kcJUkgkLAPTKs8z8K9hsa+g2pyywDGchOJUlMhDzeC0dlFKirITucnG2aFrDBbiXdP8TuUFhEhC4pbQ8HVq7wcO3DkDcg5J6VkNSIgMu2JNrAtiSpt+O64e+cVndRWPVVlPIDHiDTXUOLyyKjhY3Fueov67UOtqmyPlpe03py1QbXfLQhHfOPS3ZbyeCQPRBQkDKlNncEczgZxtUJd3dJ6SlNXhhT1yQ/iTAbUgpjtjiIAUfWcKVAjhwOQzUXe7dFdVBtlsuUVLkFgNqiS3Q06lSyXD6RwhR9IA4PSoXVU5q06LtttfksPzWHnnFBhwOhpKynCSobZ9FSjg7ZoRzNiL2Oq41tSldSK+XjRcDe1Q6J8Ls28HbvPUqPGJU6suH76SsnJJH4Rk8h8cnAA/fNQTJ6PsMRsidLWGm47f+WDslPv8ulDJubin0Evl91RAabbHErPThHjVtdm+i4Wm/wD6gdoUpi1xmlcMZmQrcKPTHNTh9kZI36nbyeGwMksxxGIbtrfadwG7en3PDW0CuXsx0c1ozs/iW/hSZTo72Q5jdSz/AH+lGOKrGZ222iOjv42jdZTIn/5SLYptsjxHGQamtG9qekNcz3LdZ5Ulm4tILq4MxktOhIIBI5ggZGcHrWvJDMavcFnEk3RDqGxQtTaWnWG4ICo8xotE9UH8Kh5pOCPdXLXZ9dU6T7RLhbNRSm4fGhcOQp04SH2l4ST4Z33866e1RquxaOsRuuoJv2ZgrDTaUpK3HVnkhCBupVcq316z6w7cbpcIa3YUKfwupTcoxb+8UlKSlaeYBUDgg58PCmcFN+HY6d47LRX7engoGdZ2N6vJ4BSeJKgUqGQQcgio2YM8SsKySrJKs53FAOl7pdNJ6ma0neg6i3SHCzGD54lRXv8Al8XVB2weW4I60fS9wNup6e6vSYTEMxMYljNQUsWOiOVyYNSjbr2zPUnLaHChxOc8SDsofImnUZb1s1BK04JKkw5KlMjw9NP3awfin4VHzgVF4cJBJVtwYHT+/KvLm4p20Wm6JJ7wtGOpX52lYB/2lPyquIiDngH91u8XHujgop7MruuDd3YbuUltYd4T0HqrH6VfI3Ga5rjykxO0hiU2eFmYUubcsOpyf6j9K6HtEgybHGePrFAB942P6ViYkZZ839wB79ClsU2wd3KvO2KYWbIpsHlGVj3qUE1R61BvSbAzu9KWs+5CQB/1GrX7bXyG1oztwMp+ayaqi5MSI+m7UXWVoSpLqsqHVSsj6AGm+jKUvtf6NTDBSMcvdO5hCLhb4pAwxAScE49JeVH/AKqkIyTlXpowOPYL93L+96iroonV0xI/y2G0DHgG01KQ1HgcAKuE94ASgZPLP99K2MIPyWnffxuqyalTLR43C50VnYnJ+NN9Yaddv9oVHjO9xcozgfhv8XqODpnwPL5eFOmGn24jEhSFJQsngURscYqB7SNUzrXpwNQFgXe6OiLGKdijI9JY8MDAHmfKryloaS7RAFagDVAdy15rGFf1xRJtjpg4VLRFSFNBXVtTh5q8k9eXI1p7Rr9Hvln0xdI8dbBkl5ZKtl4TgcORzGScUxummVW7SUVrHDIlgmMgj8GcKfV4qWdk+CceNReqpsswbDZp9rXCftiVshYPE2+g8OFJPjkb++vDxYqHEuc7DgNLc1KWJGU343pyWzlc0DOa/wDayZjkqbfWtfctuBL6gfUStIKVe7c0XCUv7Q3MkWduRPbAIll/DLhHJxaMbqG3XBxvUHYn1pDZiBpyS033bkd04TJZO6TnoRnH0NFtutNlWQ+bWuKpPpcDyvQSfEAKKfjXnoOm58LUVrXfX6j6I7oGuUd/C1uwzOlhTzpUXXVr5rydyacRbHCiXpiy31AXb7lkRXyPSYcxyz1HUe4iii0ts3HTF6nqA7pSQiMT+IeqCPfhZ92Kb6rQyeyyDcAR9phygpCv5Sg/ur51myY6eZxzuN7q2RosAhjTDLHZj22sW/UUZpy2zFiOt1SRlnJwlwK5gAkZxsQc+FdI6hd0npWOvVd8TCYVFR3TL8kj7r8jQPqk9eEZPnXO/bG41c7BbrirAkJQGyoczgEZ+g+VdDaJmo1J2X6fuc9lqQ49CaWvvUBf3gTwk7jnkH516vB4h2Iw7ZZD2h2TvO7ySE7cruCpDVfbXc27rGWvTk4x5aA9FVNcMfvWyopC0IwSEkg4KueM1avZ8hFykqvpt6oryW1x3kvthLzTgVhTSjzykg56cj1FEt50hpjUNzhXG+WOFPlQjmO8+jiLe+ceYyM4ORUwltCFLKEJSVq41FIxxK8T4nYb+VMyuiLR1baHbdU652XKqB7YdbHTvaimTLsrs9q3w2moilLCGmXHgtbi84PplLaUjA2CVb70C2i6o1T2xTWr7AcitzEtxFx3FhSmkpABHEOvpFXyq+e0Gx2X+NWzUd+tcW4Wfjbg3NuS3xoaSV5YkHw7txRST7LpzsKoDUkdVg/8SN8YPohNyU+knb0XEhY+A4vpVceWnBEsbegBPCo9/VXw7iXBqmu01xatGwTJczc7f9066Oa1MucCV58SMUdokfaLe3JVglxhLm5xgkA/vVK6iu0jU9yZtsUlbs17gSB1K3OL6AJq6HUCPD7lrJS20EDbOwAFav8ASrHDCEu0Jt5e6FjqB4CZzVektXEMcS+TnF1H9+dMnJbH/DDkBx3D7c0OtII3KVIIV+ia23KQ7HacWoEAlafSQB1GfjT6zxpxuTVrtD7UWUpoPzLi4gLWjiAIQjPLAI5bk53wK3MXK2NoLtl/BCYK6KGk3FtbdtW2pQfitBDgIx6qyU/Q10tpF8Paf2OyXDj3HB/eqTvVsuEabEteoZ7V0hTyWo9w7sJejO9N+ZGSMgkggnkRVtdn6nDp9bbowtIbCh58AB/SsHFzMkMTmcfPw2hUnH5Z7kA9t6NlqPLhZP8AUoVVl2ucqXpm1NvO8SOBzO2MlKuEZ/04q4u26MV2pToHONn/AGLB/Q1R7p7zScRXVqS62fcpKVD9DTfRjWkVcNHnzarsd+WOXupC6OBOsJqiR6bLaxv4tpqSg8K3z940OIqSMqOE8t6hZqyu6QZO+JNuQCfNOUn/AKalYTi0rUU95uFhWwwRt/ZrZwn/AAtG4U8LKkmpRS+0qHJMFTyHSyopKkk4J25A8qrPVjwuHbrZbe6fuosUKA/MviJPyA+VWXcVk3+Xzx3y/dzFVDr1xVq7Y7bdTnu3IzZz/KopP0xSXTOY4CXLrQruHA68KwL9BYul4uFz5NQvs8ZlPQJ4wAP6arrthgqYvzDDIPA33iU46YKT+ho1k3Irt99jMHiW42iS0B+LgUF7e8ZqH1a6xf7BFvLCO/W3wrW2Oa8J4VD/AFI5eYr5Lh5HQStlbqCtwtqKFVpbJjS4yA6VIWg5bdQeFSD1GaJoTqp33c+5PusDmh5xKEH+bAyr3UHTIT1ruBdYUH47g421Dk6g8lDz6EdDmtsabDeIAUtPilKsEVo4nCB466AVYfEcD9dqq11Oy7VWfK1QPsbdmtJLjyj6G2OJWMcZHRKRyrTqO5j+AQ9NtucZQpLRI3KlFQKvoPrQczfmILCmrbFDDitlPKPG4r3HpTJF1cYkGa8rhdQD3SlH/DJ5q81Uk2EuOVour2F0Qdo93S82xaWz3iozYSrh6uHp8yR8K6o7O7eu0dltktzgwtmKlKh59frmuaOy/Qlx1bqiLe7hHWm3tOBcdLo3kLH4sewnnnqRjxrrphlDEZthv1G0hI9wr0sMP4eEQnWtTw3D6pDEuBWdapcpuHEXIdCyhGM8CeI8/Ctp2oQ1B2naK02/KiTryl64RlcC7dDbU/J4sA8IQkeBG5IHnRGsc80aKpUKHu3ahpiRDnWy52S5PQJTa4gQ/HKft/ECktsoxxOE+Q8DXMWrZF0b127CuqXlXZiLGguNA946VoZCeEkessJKUqPiDXQmku1TS9+145JVo+9WyQiK+tyZMjJDcZttPeKHGPVK0p35bgDJyKHNBw25Fid1fNiNfxS+SXrgp9SAXENuLJQgK5gcONvOtfCdH9e18MoIFvX7Lr5hCczQh7s90LJtDv8AxDfmu7nqSUx4p3+zpPMq/ORtjoM9TsYzHU8Cx6PqkDJI8KfvryFc9hnaoiYtY70AL3SoK5eVelhhZEwRsFAEnnL3ZnKNuSkvsqaTw54lbhROeWKc2+fMEtNztzYfeLSWpUXOF5SAOIDqDgcuRzTCUspfLauMYcV62Mjl9a0OMMnTsi6LCu/XP7lpfFj0QklXL3poOMiZI0B223imI3EFEc+8zpcmJOvMcwoMFZebYcP3j7gGwA59BvyAzV2dnSlr08p1z1lpbUo+ZRk/rXNU6MlMK24K1PymS4sqVnmspTj4CuodDMdzptW3NzhHuSkD9q8/i4GRGIM/l5eO1cxDqxnuUZ2pW8TdLtrIyApTKvctJH6gVzLC4l2O5Q1D02uCQB5oVwq+ivpXYGooBuWmJkRIytTZUj+Ybj6iuTLm2i09oCy4OGLJOVD8jgwr5En5UXAvLXvZvAcObVXDuzRgbvdNnV97pWJJHrQZKmlfyODiH1CqkIS0gqJDZ2VjntyqOtrCk3Cbp+SQFSUqjgno6k5QfiRj417b5bn2ZIKlpcBU24CfcMfSt/DkAuYOY5H71VniwKOZzwVqOen0QQ4o5PXcUJdpNgdvWlkzYTfeTbcsvISkbrbPrpHwAOPKp+ZKKNR3PBUCpZHonzHPyp2y8ouqySV8R9+c0Z7A9pa7QoLiWuzBUvZdSuoZirC+J5ocKCeS09Enz5j5U9/iSbcpT8ck219R4dslhR3LSx5HkamtZ9mUtFweuunmQ3IUeN+2r9EKJ34mzyBPh8vCgBdycgyVxbpHfhyMcDiHkFJUPBQIwoV816T/AKfnw7yYm5mcNVtQYtkguaFSFwLElhSWHUd2pRXwc0hXUjwJ6+PhQ5JjIzhQSpfQp51udetoJUiQlIPTw+tZfY7gqxybtGt7/wBgYSO8mOJKUbnACSfWJJ5Cluj+j8Y6QdU0t46IkkkYHaKOtGdmkLUui4l5kXq4xXXlOJU20EFOErKQRnfkKNbb2SaYgoVJ7p+4yUDKHZ57xtKuhKAACM9DVm6A07FsvZbYIL8Rr7QiEhbpUgE8a/TOfirHwoldaacjLjqQA2oYwBitifFv6x2Q0FTogNc2gsgHSerW27o7GLCYtxjpCJVucI4kp6KQfxIPMKG3Q45VZ8C5xLkzxxXQSPWQdlJ94qo9VaNg3h9CZinos+KcxrhFVwPNeaT1SfZO1DiLj2kaWfBkW9vU0RvlLgq7iUB+ZHIn3VRsbX3Yb7j7FWljD7nxXRVRt9gyZ1mebtz32acQO4kpCctqzz3BBHkedVPbu3/T7S/s14ekQnk7LauMZbK0+9SQR86KWO2fQDsbvl6ggoGMnElB/cH6V0wSt1afBK9W5pqEL9o8XUtp7LbhCvN/Fxud/fj2aMWWUspShxWXDgbk8KTvnlTsNtRITUOOAllhtLSEjolIAH6VA3vVrPaZr20SLKw9/wAP2FbkkzHE4TKkqTwpCAeYSMnPn7qlXXfRVhWdq9X0VA6OGrxQm6RxLszqFN5TmOPfpUJMdGVbp/F0O/KpgyIqGZf2xt9SltqDZSoD0sjn5UOTXypZQpSjwqVsTnmf/atUKoFAmc91KVOuJ4AOJWAnO3LxrfdeKNp+zWpI+8DKpa0/ndV6I/2hPzrS3F/ieoI9sC1JbceK3VKOeBsbqUfgDTliY3ddav3lxGIkfilcJ5BtsANp+JCB8aTxD6PH8RXv0HujtCd9wmV2lQ7YkAtwy0wfc0kFX9QVXT+nI5j6YiIUMKUjvD71HP71zj2Y2x68apenO5Utaw1xfmWeJZ+Az866hQlKG0oSMJSMAeVYGLNZ8n9gA79ShYl3ZA33WVc29s2mjCubstlvCG1d6nA5tLO4/wBKq6SoS7QNPpvWmVuoaDj0dKlcGPXbI9NPy3+FADzE5srdW/ChYZ4a7KdCuUJrq5MSLeG1EOpww8oc0uIHoq+KQPik05nLQqSxemQEszv8ZI5Nvj1h8fWHvpzCktaWvc21z2O9YfKeF87gI3wSOo339xqNiFMSVJsV1IRHfIQtY3DSx6jo8t/iDW7HIa5mCwuOLTr4fNU84bD8KIZ73/zJP8e8PTONxT5l7hdXuOvCeEgc+nhQshyXFuMiJOUftLY9NXF64yMHPUEYqWakqcdbytQK1qGSrPNQ/vzrVDg8Zm6ID23RzJLMqOq6mVwrdSlSWFAk5zwqGfIimTjMOcz3U6JHlI9l9tKx9RTSbNQbg/FbAQ1FV3DaQegUdz4knc1m06OBJHMjPPzqoFkKQXsm06HofTkBd2n2mzwmmyB3pioJJPIAYJJPgKELprLS+uNbad069dWYWnWXxLmvS8spWUeq0AeWeXh6XlWp+SdcdoaVtnvLJZD6O2UyJB6+YH6DzovZhQ57hjyrfCltkekiRHQ4PqNqXm7TS0WTEMFg92quRiZGmxkyoUhiQwr1XGFhaD7iNqy4t6qGP2dwWHjN0XdZ2kbnzBjOKdiOnwW0okge4keVSkPtEu+mbozY+1K2Itrrp4Y97i+lCk+8j1D+nUCvIYjoqSPtMOYeaca8aI9uMFM1kKT/AIqPVPiPChiY6zAhPy5R4Go6FOOE7YCQSf0owQ4hxtLrS0uNrAUlaDkKB5EEcxVa9uUpu39k8xxtXA9Ndbh7dQo5Uf8Aak/OksPH1kjY95R2yZRdCfZ1DNyh3HWl3ZQ7MvL6lNh1IX3bCThKRnpt/SKJ12GyyXFODT9udUgcRUIiCUjx9WgfRms248SDpm7tsxnEtJRClNH7mSjpg9FfqfA7Ufx7k9DeUtpQwUlK0K5LT1Br6BG0NaA3YsSQOMhLlrWtLbQbbSEpSMJSgYAHkByrdeHHJLyXGY6QG4bS1903sAQDk45e+mdy7tqSlUdSw260HkpUrdIIO2evL40ri/NKnPsT5abTbGVPjvODiTwjbz91X2iisxlAQVDzJDay+kBscIVghJ33HLwqFkugOOkqACcnYc9/pWT7/E66QTvnmfP61pixU3S5vJkuqZt8XLsx4HOE59UHqpR2Hn7q7I8RtLnKzW1ThDpt+mZFxUAmXdcssJ5FuOD6av8AUQEjyBpu8TbdKojHIk3FQeWOqWUn0B/qVlXuArfBuBuGr/43JZbbgwQHS0RlLbSdkNgdSTgDxOTUzZmVa27Qf4siAW2Gu7SGieIuODZIJ+p8gKyZZjFV0gt+o8/2t9PhRwK6fOKtnsf00bdbEyHkYU0nKv8A9qxk/JOBVr0ws1tRabKzCSQVJGVq9pR5n50/rEbU1c7U3Pes+aTO+o0SpEZFKlVkJc/9r+gFIdMy3sgJWSuORyCuamj7+YqnGs3SCmEoEXGMkpZB5vIHNs/mTvjxGR4V2vdLZFu9rdgTG+JpwY25pPQjzFcv9pOgZ1kvTkyM2rvk/eKLYx3qRycT+YdR/ZZwWI6oiJxoK2O47uRWlDJ1ovqPMfVB0R1F4iNQHnA3cGBiI8s4Dg/5Sj/0n4UospwT0tvNll5DoC2yMFJz4VoUE3xBfYCU3IDLrKdhIHto/P4p68xW5maxdkttzn0xri3gMzleq5jkl39lfOtuOQxkkC20buI4FEIqiOTJ/wDObkdiTJVjbP4j16UMzbpc9WXBdj0+/wDZoDI7udPSPW3OUI8T59fdza3x29reetZYLFxmuhKnirhQ2lRJKx0IOdiKNrDY2LbAjWe3IwlOxURuo9Vnzph8gcKtNlGRguJKg4nZhbHlhNqkXKE4kAF5qQR9Mc6IGLN2laXaDlv7jVsBO6oktPBJA/IsHJPxPuqxbVakMtpbQjAH186KocNLaQVAUm+VWc7cgrRWpdPasS43a3HYtxj/APqrVNHBIYI57fiSPEfECjSbZrbdrG9arvCZmQnhhxh5PEk+fkfMbihLXuh7dqB5m9W6UbNqSKQYl1Y9FXF0S5j1knl4jzGx0aP1/LvH2nTmpYyYGqLen/4lgbIkI/5zfiORIHLORtyCauuFS5uhiRCvnY3JVKty5N70KpeXoyjxyLXk+sk9UfTxwdy813HGt4mi5NjZ/i9pXd235DjSeNAZ4SCVjoOYIPLkaK5lwWlSlJKTkFKkqHElQOxSoHYg+FVv9oc7M7y7fbEy49pSU4DcrUk8SresnHfNeKP/AOT+E0nicESeuiHbHn90ZjjShQjftIxtOa1k6LnIU5ap4Mu0vE+k2c+k2D4g7eeB41IWadcrNPTpzUr3G8tnvbfMI9GY1yxn2xgg9diPef8Aafa2NT9lyNSWN5uRJtvDdIMho5C0jdYHvSM48U0rjpm19pHYrEm295DMpTYuFtdB3jP49NGfZJSUn3A9KZ6OxpkiBdqLFUmaDZD16lL4Iak7JEVCc425HrTG9yOJ9rJ/+xYHLP4R8qgWdRKutnZQ+2WJUNIiymlHHC4nIJx5/wDcU6eD98kBcF1LURmO03JmPZS21hIB36nPIDc1sOe1jczjQIGWpITWO3LuVw+wwQkrKSXHFnCGkdVKPQDxrdLfTL7jTmnkLcjBeeLGFSnerivBI6DoN61PzA60mwadYdLDqgFrx97MV4q8EjonkOZpLcTAaNotShJnyPupEhnfn/ktnw9pXXlypJ73PcHEchu/kfYe+lxYUW15JmPR9M2Qh9Ic4nXk8n3cYK/5EjIHlk9a6K7LNGs2e0MzFoyEAhlRGCtR9Zw+/kPKg/ss7NyCZc5Oc4+0ODl490g/qf8A2q+W0IbaS2hISlIwEpGAB4VhYnECdwaz9A8zv+iFiJMgyDU68BuWVKlSoSQSpUqVRRKoy+WOFfrWqHLTgj0m3U+s2rxH/brUnXlcIBFCutcWmoXKWv8As2uVlu65MNkoez3gDWyXcfjbPRXin+yD97GupKJikxLiDjv1DhbePg4Pwq/NyPXxrtq52uDd7euHPYS80rx2KT4g9DVEdoPZA4guT4YU4gbiU2nKkjwdSOY/MKaw+NdFRspsNDtHPeFoxTNlsbHyP3VPmRMism2Xq3OSYjfRQIUznq25yGfDcGp3T90nWh8SLI4i9xQnCoj54JDQ8h1+GR5Uycm3XTtmXZrnbUyIrhKQ73h4VJPMJUOXl4eFRCIMaU4HLROKXRuI8lQbcB/Kv1VfQ1pRuzAv0G8XaeJ3fNUY2t/2r20x2g6Ruiww9N/hkwbKjzx3Zz4BXqn5ii25qRKtxQw+WzjiafbPqq6KB6/uK5jkXWe0RFv9vbmADGJiClwDyWMH9a3wbtChkKtl3vVlUfwIX3zXyBB+ldyEdojwuPr5Klq6q8It6F1hPwrghKZLYLb7Y5K6ZH97UBamt064lE62vFvU1kUXYUkc5DY3LavHIP1PiaHWr1evt/2xjVNqlOk5JkJLSldNwQKdrvOpnZqJaU2RTiMek1LSAf6quJIxtpzt6ogHBFNu1LF1FpuNeoae6S8MOs53ZdGy0fA8vIimbsklw4CVAgpUlYylSSMFJHUEbEUHQ27zbZ9zkRnrPFbuDvfOMLlJLba+pQAcjOd6TsySciXquE0PZhtKcV9AP1qzZY9hryv6LoNNQpvSl8Gh9Vf8OT+JWkrstQYLhKhBcV6yCf8AlnP6Hoaj9K6lnaZtknS1sjuXQx5rwh9weJC2irIORyHP51CLl2NpRWWp90c9qW73SP8AanJPzrY3Ov12jKi22OI8P8SIiAy0P519fiaEIQ17pGigOtbDnTX0VS6tltlw7Y3dpV1vy2lTn1cbkCArmRyDi9wn4ZNeOqvF6wyplEC3RwFBCklqOwk9Tn1ifiT0polu02tYckSBcJCDkMxjwspP5nPxe5I+NEKo9/149FU5FTCit5AX6RDijzKU81Hw/WqyydUQ92n9x2f4t2/NVwDNUfO9Q6JHEv8Ag+mmXnHHhwOySnDr46gD8DflzPU9Ktzsz7LVKWmbL9zkkDZPihrz8VUTaE7JYtrjpeuDCmkqwVNqP3r385/CPyirZZZajsIZZbS22gYShIwAPAVlYjFOnBY2zNu93PhwQJJxHZtz5BYRIkeDDbixWktMtjhShPIVupUqEBRZ5NUqVKlUUSpV5xo9pPzpcaPaT86ii9pVjxo9tPzpcaPbT86iiypVjxo9tPzpd4j20/OoohLUXZ5ZL4hxbbaYjy/W4EBTa/5kcviMVSeqexOdBUt6JHW22N+8jAutfFPrJ/SumeNHtp+dLjR7SfnXGF0RzROyn5s0TLMS5oo644ril606ttDamUIM2KP8sAPo/wBitx8qilzbcpZROsncL6mM6po/7FZFdrXHT1guxKp1vjOLP+YBwr/3DBoUufZRp6cCG5TiAfwvJS8n67/Wm2Y+Rt3sB4g5SmG4iN2pI53XKnd2JwejNnseTrCXB80qH6U9tNnsc65Bl69gpKSQkNFpRPvVtV5TOwWA4olldsX/AKVtH+kmopzsBHFs3FP8s1YH1FGd0mHNIBeD/wCJRGujrWo81TL9vs7MpxsX5KkpUQOCMpROPPIB+FYkWBpOVPXKSR0ShDQPxJJq7GewJGfTREA/PMWf0FTUDsLtjKwXnbajHVLRdP8AUa7/AKoKU7Z/9QuF0Y/cPMrnyPNbW6G7Rp9pbnRTgVJX8vV+lTMfS2q788hFwcWygn0WnDkj+VpP/tXTFu7M9OQkAPOvSMfhCg0j5Jx+tFEC12m2I4LfEjR/EoSAT7zzNLux8rjVjQ3ie0UN2IjGlT5BUdpPsPVxNyZ7HByPezQCr/S2Nh8auWyaVtFiSFxme8kYwZDu6/h0A91TPGj2k/Olxo9tPzpVwL3Z5DmPH5ZLSYh7xTQbgsqVY8aPbT86XGj20/OuoCypVjxo9tPzpcaPbT86iiypVjxo9tPzr3jR7Q+dRRf/2Q==');background-size:cover;background-position:center;border:1.5px solid rgba(245,161,92,0.45);box-shadow:0 0 0 1px rgba(16,8,24,0.9), 0 2px 12px rgba(181,157,240,0.35);flex-shrink:0;}
+.header-text h1{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;background:linear-gradient(95deg,var(--lavender-bright) 0%, var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.5px;line-height:1;}
+.header-text p{font-size:11px;color:var(--text3);margin-top:4px;letter-spacing:0.3px;}
+.status-dot{margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);animation:pulse-dot 2s infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+
+.messages{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth;}
+.messages::-webkit-scrollbar{width:4px}
+.messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+.msg{max-width:88%;animation:msg-in .3s ease;}
+@keyframes msg-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.msg.user{align-self:flex-end;background:linear-gradient(135deg,#6d4bb8,#8b5cf6);border-radius:var(--radius) var(--radius) 4px var(--radius);padding:12px 16px;font-size:14px;line-height:1.5;box-shadow:0 2px 8px rgba(139,92,246,0.2);}
+.msg.assistant{align-self:flex-start;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius) var(--radius) var(--radius) 4px;padding:14px 18px;font-size:14px;line-height:1.65;}
+.msg.assistant strong{color:var(--lavender-bright);font-weight:600;}
+.msg.assistant code{background:var(--bg);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);}
+.msg.assistant ul,.msg.assistant ol{margin:8px 0 8px 22px;}
+.msg.assistant li{margin:4px 0;}
+.msg.assistant p{margin:6px 0;}
+.msg.assistant h3{font-family:'Cormorant Garamond',serif;color:var(--lavender-bright);margin:12px 0 6px;font-size:20px;font-weight:700;letter-spacing:-0.3px;}
+.msg.assistant .warn{background:rgba(245,161,92,.08);border-left:3px solid var(--accent);padding:8px 12px;margin:10px 0;border-radius:4px;color:#fcd9b8;font-size:13px;}
+.msg.assistant .suggest{display:inline-block;margin:4px 6px 0 0;padding:6px 12px;border:1px solid var(--border);border-radius:14px;font-size:12px;color:var(--accent);cursor:pointer;background:rgba(245,161,92,.06);transition:all .15s;}
+.msg.assistant .suggest:hover{background:rgba(245,161,92,.18);border-color:var(--accent);color:#ffb87a;}
+
+.msg.system{align-self:center;background:transparent;border:1px dashed var(--border);border-radius:var(--radius);padding:10px 16px;font-size:12px;color:var(--text3);text-align:center;max-width:95%;}
+
+.quick-actions{padding:8px 20px;display:flex;gap:8px;overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch;}
+.quick-actions::-webkit-scrollbar{display:none}
+.quick-btn{flex-shrink:0;padding:8px 14px;border:1px solid var(--border);border-radius:20px;background:var(--surface);color:var(--text2);font-size:12px;font-family:inherit;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.quick-btn:hover,.quick-btn:active{border-color:var(--accent);color:var(--accent);background:rgba(245,161,92,.08);}
+
+.input-area{padding:12px 20px 20px;border-top:1px solid var(--border);background:var(--surface);flex-shrink:0;}
+.input-row{display:flex;gap:10px;align-items:flex-end;}
+.input-row textarea{flex:1;resize:none;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);padding:12px 16px;font-family:inherit;font-size:14px;line-height:1.4;min-height:46px;max-height:120px;outline:none;transition:border-color .2s;}
+.input-row textarea:focus{border-color:var(--accent);}
+.input-row textarea::placeholder{color:var(--text3);}
+.send-btn{width:46px;height:46px;border:none;border-radius:var(--radius);background:linear-gradient(135deg,var(--accent) 0%, var(--accent3) 100%);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,opacity .2s,box-shadow .2s;flex-shrink:0;box-shadow:0 2px 10px rgba(245,161,92,0.25);}
+.send-btn:hover{box-shadow:0 4px 14px rgba(245,161,92,0.4);}
+.send-btn:active{transform:scale(.92)}
+
+@media(max-width:600px){
+  .header{padding:12px 16px}
+  .messages{padding:12px 16px}
+  .input-area{padding:10px 16px 16px}
+  .quick-actions{padding:6px 16px}
+  .msg{max-width:94%}
+  .header-text h1{font-size:20px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-icon"></div>
+    <div class="header-text">
+      <h1>ADA</h1>
+      <p>Asistente De Aceleradores · Servicio de Radiofísica</p>
+    </div>
+    <div class="status-dot"></div>
+  </div>
+
+  <div class="messages" id="messages">
+    <div class="msg system">Funciona sin internet · Base de datos local</div>
+    <div class="msg assistant">
+      Hola, soy <strong>ADA</strong> — <em style="color:var(--text3)">Asistente De Aceleradores</em>.<br><br>
+      Escribe el <strong>interlock</strong>, el <strong>síntoma</strong> o el <strong>equipo</strong> (Halcyon, TrueBeam Naranja/Verde, DHX, CyberKnife) y te doy el procedimiento de resolución.<br><br>
+      <em style="color:var(--text3)">Ejemplos: "halcyon apagado", "interlock MLC truebeam", "BGM", "regla BAM"</em>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <button class="quick-btn" onclick="sendQuick(this)">Halcyon apagado</button>
+    <button class="quick-btn" onclick="sendQuick(this)">TrueBeam tras seta</button>
+    <button class="quick-btn" onclick="sendQuick(this)">Interlock BGM</button>
+    <button class="quick-btn" onclick="sendQuick(this)">Interlock MLC</button>
+    <button class="quick-btn" onclick="sendQuick(this)">HVCB DHX</button>
+    <button class="quick-btn" onclick="sendQuick(this)">XI / CBCT</button>
+    <button class="quick-btn" onclick="sendQuick(this)">Iconos Halcyon</button>
+    <button class="quick-btn" onclick="sendQuick(this)">BAM vs MCAP</button>
+    <button class="quick-btn" onclick="sendQuick(this)">Ctrl+Alt+Shift+R</button>
+    <button class="quick-btn" onclick="sendQuick(this)">Palanca TrueBeam</button>
+    <button class="quick-btn" onclick="sendQuick(this)">Calypso</button>
+    <button class="quick-btn" onclick="sendQuick(this)">CyberKnife</button>
+  </div>
+
+  <div class="input-area">
+    <div class="input-row">
+      <textarea id="input" rows="1" placeholder="Describe la incidencia…" onkeydown="handleKey(event)" oninput="autoGrow(this)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="send()">➤</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════ KNOWLEDGE BASE ═══════════
+const KB = [
+
+  // ──────────── NOTAS Y REGLAS GENERALES ────────────
+  {
+    id:'notas-generales',
+    title:'Notas generales y reglas importantes',
+    tags:['notas','generales','importante','reglas','aviso','advertencia'],
+    body:`<p>Todos los aceleradores del servicio están actualmente operativos: Halcyon 1 (Amarillo), Halcyon 2 (Azul), TrueBeam 1 (Naranja), TrueBeam 2 (Verde), DHX y CyberKnife.</p>
+<h3>Principios básicos</h3>
+<ul>
+<li>Ante cualquier incidencia no contemplada, contactar con Varian: <strong>902 102 304</strong>.</li>
+<li>En el Halcyon, <strong>siempre hacer MPC</strong> antes de tratar al primer paciente tras reinicio completo — si no, no dejará tratar.</li>
+<li>Si aparece un interlock, intentar limpiarlo primero con <strong>Clear Interlock</strong> antes de cualquier otro procedimiento.</li>
+</ul>
+<h3>Reglas de reinicialización</h3>
+<ul>
+<li><strong>Regla BAM</strong> (solo Halcyon): Beam Tuning → Axis → MLC</li>
+<li><strong>Regla MCAP</strong> (solo TrueBeam): MLC → Carrousel → Axis → Position</li>
+</ul>
+<div class="warn">⚠ La combinación <code>Ctrl+Alt+Shift+R</code> NO es recomendada: puede bloquear datos del paciente y dosis del plan. El <strong>direct move</strong> para desbloquear láminas tampoco es recomendado por Varian.</div>`,
+    related:['bam-mcap','ctrl-alt-shift-r']
+  },
+
+  {
+    id:'bam-mcap',
+    title:'Regla BAM (Halcyon) vs MCAP (TrueBeam)',
+    tags:['bam','mcap','regla','inicializar','subsistemas','diferencia'],
+    body:`<p>Las dos reglas de reinicialización tras apagón o seta. <strong>Cada equipo tiene la suya</strong>:</p>
+<h3>BAM — Solo Halcyon</h3>
+<ul>
+<li><strong>B</strong> — Beam Tuning</li>
+<li><strong>A</strong> — Axis (Couch → Gantry → Collimator, ENABLE pulsado)</li>
+<li><strong>M</strong> — MLC</li>
+</ul>
+<p>Tras Clear All → Beam ON → esperar <strong>3 minutos</strong>.</p>
+<h3>MCAP — Solo TrueBeam</h3>
+<ul>
+<li><strong>M</strong> — MLC: pulsar initialization → initialize.</li>
+<li><strong>C</strong> — Carrousel: "initialize axis" → "commands" → "initialize all".</li>
+<li><strong>A</strong> — Axis: en "Initialize X jaws" y en "Initialize Y jaws" pulsar "initialize".</li>
+<li><strong>P</strong> — Position Unit: inicializar KVS coll, KVS, KVD y MVD (~3 minutos).</li>
+</ul>
+<p>Tras Clear All → Beam ON → esperar <strong>12 minutos</strong>.</p>
+<div class="warn">⚠ MPC obligatorio al final antes de tratar.</div>`,
+    related:['halcyon-arranque','tb-arranque']
+  },
+
+  {
+    id:'ctrl-alt-shift-r',
+    title:'Advertencia: Ctrl+Alt+Shift+R',
+    tags:['ctrl','alt','shift','teclado','bloqueo','cache','paciente bloqueado','unidades monitor'],
+    body:`<div class="warn">⚠ Esta combinación <strong>no es recomendada</strong>: puede bloquear datos del paciente y de dosis del plan.</div>
+<h3>Qué hace</h3>
+<p>Devuelve al menú principal pero <strong>deja abierto el paciente en el sistema</strong>.</p>
+<h3>Si ya se ha usado y hay problemas</h3>
+<ol>
+<li>Si se acudió a modo servicio con este comando y no se arregló, volver al paciente y <strong>cerrarlo</strong>.</li>
+<li>Si no se cerró el paciente y se intenta abrir en otro acelerador, probablemente no deje. En ese caso, cerrar en el primer acelerador. Si está bloqueado: <strong>Treatment Preparation → Editar → Administrar planes en caché externo</strong> (borrar caché).</li>
+<li>Pero ojo: <strong>¿El paciente había recibido UM del plan?</strong> Es posible que las UM impartidas no se hayan guardado.</li>
+</ol>
+<h3>Recomendaciones</h3>
+<ul>
+<li>Si hay que ir a modo servicio, <strong>cerrar primero al paciente</strong> (aunque los técnicos tengan que rehacer el CBCT).</li>
+<li>Si se va a usar este comando, <strong>apuntar las UM impartidas</strong> previamente.</li>
+<li>Si el tratamiento ya se empezó y el paciente está bloqueado, <strong>no abrirlo en otro acelerador</strong>: llamar a Varian para que desbloquee y recupere los datos.</li>
+</ul>`,
+    related:['notas-generales','teclado-bloqueado']
+  },
+
+  // ──────────── HALCYON ────────────
+  {
+    id:'halcyon-arranque',
+    title:'Arranque Halcyon tras seta o apagado',
+    tags:['halcyon','seta','apagado','arranque','encender','reinicio','beam on','amarillo','azul'],
+    body:`<h3>Procedimiento</h3>
+<ol>
+<li>Verificar que <strong>no hay ninguna seta pulsada</strong> (todas las setas del equipo y de la consola).</li>
+<li>En el armario de la pared, dar al <strong>pulsador verde</strong>.</li>
+<li>En el cabinet, encender los <strong>tres ordenadores</strong> (Treatment, IRM In Room Monitor, Service).</li>
+<li>Puede que pida la clave del usuario <code>varian</code>.</li>
+<li>Una vez en la pantalla de Treatment, ir a <strong>Service</strong>.</li>
+<li>Dar a <strong>Clear All</strong> hasta que desaparezcan los interlocks en rojo.</li>
+<li>Dar a <strong>Beam ON</strong> (icono del haz) y <strong>esperar 3 minutos</strong>. No continuar hasta que el sistema confirme que está listo.</li>
+</ol>
+<div class="warn">⚠ No saltarse los 3 minutos. Si se intentan las inicializaciones antes, aparecen interlocks falsos.</div>
+<h3>Aplicar regla BAM</h3>
+<ol>
+<li><strong>B — Beam Tuning</strong>: pestaña Beam → Preset → Inicializar AFC Motor.</li>
+<li><strong>A — Axis</strong>: entrar al búnker, pantalla táctil del equipo, <strong>mantener ENABLE pulsado</strong>. Orden: Couch (vertical → longitudinal → lateral, cuidado con los pies, la mesa se desplaza bastante) → Gantry → Collimator.</li>
+<li><strong>M — MLC</strong>: pulsar Initialize.</li>
+</ol>
+<p>Hacer <strong>MPC obligatoriamente</strong> antes de tratar al primer paciente.</p>`,
+    related:['bam-mcap','halcyon-bgm','halcyon-mod-apagado']
+  },
+
+  {
+    id:'halcyon-bgm',
+    title:'Halcyon apagado con interlock BGM',
+    tags:['halcyon','bgm','apagado','interlock','supervisor','torre negra','palancas','pasillo'],
+    body:`<h3>Procedimiento</h3>
+<ol>
+<li><strong>Revisar las palancas del panel del pasillo</strong>: con la llave grande, abrir el panel y subir las palancas bajadas o sueltas.</li>
+<li>Verificar <strong>Beam Tuning en modo Servicio</strong>:
+<ul><li>Passed → estado correcto.</li><li>Fault → inicializar.</li></ul>
+</li>
+<li>Si aparece el <strong>interlock BGM</strong>, seguir esta secuencia:
+<ul>
+<li>a. Reboot Supervisor → normalmente no resuelve.</li>
+<li>b. Power Cycle Supervisor → normalmente no resuelve.</li>
+<li>c. <strong>Pulsar seta de emergencia en la consola</strong>:
+<ul>
+<li>Comprobar las <strong>8 luces de la torre negra</strong>.</li>
+<li>Verificar el símbolo <code>~</code> (indicador de corriente).</li>
+<li>Pulsar el <strong>botón verde del panel trasero</strong>.</li>
+<li>Comprobar que el error desaparece.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Si sigue sin encenderse (estado 0), volver al paso de Beam Tuning.</li>
+<li>Dar a <strong>Beam ON</strong> y esperar <strong>3 minutos</strong>.</li>
+<li>Aplicar <strong>regla BAM</strong>:
+<ul>
+<li>B — Beam Tuning (si aparecía como Fault, inicializarlo aquí).</li>
+<li>A — Axis desde pantalla táctil del búnker, ENABLE pulsado. Orden: Couch → Gantry → Collimator → KV.</li>
+<li>M — MLC: Initialize.</li>
+</ul>
+</li>
+<li><strong>MPC obligatorio</strong> antes de tratar.</li>
+</ol>`,
+    related:['halcyon-arranque','bam-mcap','bgm']
+  },
+
+  {
+    id:'halcyon-iconos',
+    title:'Iconos de la consola del Halcyon',
+    tags:['iconos','consola','halcyon','puerta','check','colimador','mesa fuera de rango'],
+    body:`<h3>Significado y acción</h3>
+<ul>
+<li><strong>Puerta abierta</strong> → Cerrar la puerta de tratamiento o la cover door. Quizá el último hombre no se ha pulsado antes de salir del búnker.</li>
+<li><strong>Valores planificados y actuales no coinciden</strong> → Esperar a que termine el movimiento o mover la mesa.</li>
+<li><strong>Función interna en curso</strong> → Esperar a que se complete.</li>
+<li><strong>Colisión detectada o posible</strong> → Retirar el obstáculo.</li>
+<li><strong>Mesa fuera de rango</strong> → Empujar la mesa a una posición válida o inicializarla.</li>
+<li><strong>Consola de control apagada</strong> → Girar la llave a posición desbloqueada.</li>
+<li><strong>Error de colimador</strong> → Inicializar el colimador.</li>
+<li><strong>No hay check cargado</strong> → Cargar un check.</li>
+</ul>`,
+    related:['halcyon-arranque']
+  },
+
+  {
+    id:'halcyon-plan-anterior',
+    title:'Halcyon no deja tratar (plan del paciente anterior)',
+    tags:['halcyon','plan anterior','paciente','no deja tratar'],
+    body:`<p>Bajar la mesa a cero y cargar de nuevo al paciente.</p>`,
+    related:['halcyon-no-beam']
+  },
+
+  {
+    id:'halcyon-door',
+    title:'Halcyon — DOOR (puerta)',
+    tags:['door','puerta','halcyon','trasera','sensor'],
+    body:`<p>Puerta trasera mal cerrada. Solución: <strong>empujón cariñoso al sensor</strong>.</p>`,
+    related:['halcyon-iconos']
+  },
+
+  {
+    id:'halcyon-xi',
+    title:'Halcyon — XI (X Imager)',
+    tags:['xi','x imager','halcyon','imagen','cbct','reboot','network'],
+    body:`<p>Reboot del módulo XI en la pestaña <strong>Network</strong> en modo servicio.</p>`,
+    related:['halcyon-stn']
+  },
+
+  {
+    id:'halcyon-stn',
+    title:'Halcyon — Error comunicación STN',
+    tags:['stn','comunicacion','halcyon','network','nodo'],
+    body:`<h3>Procedimiento</h3>
+<ol>
+<li><strong>Clear All</strong>. Si no se va:</li>
+<li>En modo servicio, pestaña <strong>Network</strong>.</li>
+<li><strong>Reboot del nodo STN</strong>. Cuenta atrás de 12 minutos.</li>
+<li>Después reiniciar las cosas mecánicas: regla <strong>BAM</strong>.</li>
+</ol>`,
+    related:['bam-mcap','halcyon-spv']
+  },
+
+  {
+    id:'halcyon-spv',
+    title:'Halcyon — Error SPV',
+    tags:['spv','supervisor','halcyon','power cycle','network','nodo'],
+    body:`<h3>Procedimiento</h3>
+<ol>
+<li><strong>Clear All</strong>. Si no se va:</li>
+<li>En modo servicio, pestaña <strong>Network</strong>, pulsar <strong>Power Cycle</strong>.</li>
+<li>Intentar Clear Interlock de nuevo.</li>
+<li>Si sigue sin irse, <strong>Reboot del nodo SPV</strong> en modo servicio.</li>
+<li>Después reiniciar las cosas mecánicas: regla <strong>BAM</strong>.</li>
+</ol>`,
+    related:['bam-mcap','halcyon-stn']
+  },
+
+  {
+    id:'halcyon-pantalla-desplazamientos',
+    title:'Pantalla de dentro no muestra desplazamientos',
+    tags:['pantalla dentro','desplazamientos','tactil','halcyon','truebeam'],
+    body:`<ul>
+<li>Cerrar al paciente.</li>
+<li>Reiniciar ordenador de dentro con el ratón.</li>
+<li>Si no, desde fuera: <strong>Menu → Tools → Restart → Service</strong>.</li>
+</ul>`,
+    related:['halcyon-pantalla-azul']
+  },
+
+  {
+    id:'halcyon-pantalla-azul',
+    title:'Pantalla de dentro en azul (no muestra nada)',
+    tags:['pantalla azul','dentro','irm','halcyon','truebeam'],
+    body:`<p>Pantalla encendida pero en azul sin contenido. Solución: desde fuera, <strong>reiniciar el ordenador IRM</strong>.</p>`,
+    related:['halcyon-pantalla-desplazamientos']
+  },
+
+  {
+    id:'teclado-bloqueado',
+    title:'Teclado / pantalla bloqueada',
+    tags:['teclado','pantalla','bloqueada','congelado','halcyon','truebeam'],
+    body:`<ul>
+<li>Apagar el <strong>tercer terminal externo</strong>, el ordenador Treatment del cabinet.</li>
+<li>O <code>Ctrl+Alt+Shift+R</code> — displayan el menú principal pero <strong>dejan abierto el paciente</strong>. Si no se cierra, puede dar problemas al abrirlo en otro acelerador (entonces hay que borrar caché en Treatment Preparation → Editar → Administrar planes en caché externo). Si el paciente estaba tratado parcialmente, las UM impartidas pueden desaparecer.</li>
+<li>Salir a pantalla e iniciar programa Treatment.</li>
+</ul>
+<div class="warn">⚠ <code>Ctrl+Alt+Shift+R</code> <strong>no es recomendado</strong> por Varian. Ver advertencia detallada.</div>`,
+    related:['ctrl-alt-shift-r']
+  },
+
+  {
+    id:'halcyon-mod-apagado',
+    title:'Halcyon — Modulador apagado y ordenadores encendidos',
+    tags:['halcyon','modulador','apagado','ordenadores','boton verde'],
+    body:`<h3>Procedimiento</h3>
+<ol>
+<li>Encender modulador (<strong>botón verde</strong>).</li>
+<li>Ir a modo servicio y hacer <strong>Clear All</strong>.</li>
+<li>Dar a <strong>Beam ON</strong> y esperar <strong>3 minutos</strong>.</li>
+<li>Aplicar regla <strong>BAM</strong>: Beam Tuning → Axis (desde pantalla táctil de dentro, ENABLE pulsado) → MLC.</li>
+<li>Si no responde, intentar <strong>power cycle</strong>.</li>
+<li>Los AXIS siempre hay que iniciarlos desde dentro (pantalla táctil), manteniendo ENABLE pulsado.</li>
+</ol>`,
+    related:['halcyon-arranque','bam-mcap']
+  },
+
+  {
+    id:'halcyon-lateral',
+    title:'Halcyon — Desplazamiento lateral fuera de rango',
+    tags:['halcyon','lateral','fuera de rango','desplazamiento','reposicionamiento'],
+    body:`<p>Reposicionamiento del paciente.</p>`,
+    related:['halcyon-longitudinal']
+  },
+
+  {
+    id:'halcyon-longitudinal',
+    title:'Halcyon — Desplazamiento longitudinal fuera de rango',
+    tags:['halcyon','longitudinal','fuera de rango','desplazamiento','delta','tatus'],
+    body:`<p>Rango admitido: <strong>-17 a 31</strong>.</p>
+<h3>Procedimiento</h3>
+<ol>
+<li>Desaprobar el tratamiento y el plan, y mover el <strong>origen de referencia</strong> una distancia que permita estar dentro del rango. Medir dicha distancia con exactitud.</li>
+<li>Dos opciones:
+<ul>
+<li>Rehacer los tatus del paciente en esa nueva posición.</li>
+<li>O bien, en Notas, apuntar para los técnicos el <strong>desplazamiento adicional</strong> que han de emplear una vez colocado el delta.</li>
+</ul>
+</li>
+<li>Aprobar el plan con los nuevos desplazamientos delta. Aprobar el tratamiento.</li>
+</ol>`,
+    related:['halcyon-lateral']
+  },
+
+  {
+    id:'halcyon-no-beam',
+    title:'Halcyon — "No beam is loaded"',
+    tags:['no beam','loaded','halcyon','mpc'],
+    body:`<p>Solución: <strong>rehacer MPC</strong>.</p>`,
+    related:['mpc']
+  },
+
+  // ──────────── TRUEBEAM ────────────
+  {
+    id:'tb-arranque',
+    title:'Arranque TrueBeam tras seta o apagado',
+    tags:['truebeam','tb','seta','apagado','arranque','encender','reinicio','beam on','naranja','verde','tb1','tb2'],
+    body:`<h3>Procedimiento</h3>
+<ol>
+<li>Verificar que <strong>no hay ninguna seta de emergencia pulsada</strong>.</li>
+<li><strong>Retirar la mesa</strong> para evitar colisiones en el reinicio.</li>
+<li>Pulsar el <strong>botón verde del modulador</strong> para encender la máquina.</li>
+<li>Encender los <strong>tres ordenadores del cabinet</strong> (Treatment, IRM In Room Monitor, Service).</li>
+<li>Ir a modo servicio y hacer <strong>Clear All</strong>.</li>
+<li>Dar a <strong>Beam ON</strong> y esperar <strong>12 minutos</strong>.</li>
+<li>Aplicar la <strong>regla MCAP</strong> (mientras se mantienen pulsados los botones de movimiento):
+<ul>
+<li><strong>M — MLC</strong>: pulsar el botón initialization y después initialize.</li>
+<li><strong>C — Carrousel</strong>: en la pestaña correspondiente pulsar "initialize axis" → "commands" → "initialize all".</li>
+<li><strong>A — Axis</strong>: tanto en "Initialize X jaws" como en "Initialize Y jaws" en "coll" se pulsa "initialize".</li>
+<li><strong>P — Position Unit</strong>: inicializar KVS coll, KVS, KVD y MVD (~3 minutos).</li>
+</ul>
+</li>
+<li>Al finalizar, el <strong>PU status</strong> estará en verde y se pulsa OK.</li>
+<li><strong>MPC obligatorio</strong> antes de tratar.</li>
+</ol>`,
+    related:['bam-mcap','tb-palanca','mpc']
+  },
+
+  {
+    id:'tb-palanca',
+    title:'TrueBeam — Restaurar sistema tras saltar una palanca',
+    tags:['truebeam','palanca','saltar','cuadro mandos','ups','caja pared'],
+    body:`<h3>Procedimiento</h3>
+<ol>
+<li>Verificar en el <strong>cuadro de mandos</strong> el estado de las palancas. Si hay alguna bajada, subirla.</li>
+<li>Dentro del búnker, en la <strong>caja de la pared</strong>, fijarse en que el botón verde esté apagado. En ese caso hay que abrir la caja porque la palanca estará bajada:
+<ul>
+<li>Poner la rueda a <strong>Off</strong>.</li>
+<li>Girar los dos manillares del lado derecho.</li>
+<li>Al terminar, dejar la rueda en <strong>On</strong>.</li>
+</ul>
+</li>
+<li>En la <strong>UPS</strong>, mantener el botón de encendido pulsado <strong>10 segundos</strong>. Los ordenadores tardarán ~5 minutos en encenderse.</li>
+<li>Pulsar el <strong>botón verde del interior del búnker</strong>.</li>
+<li>Inicializar los ejes.</li>
+<li>Comprobar cargando un disparo; en <strong>Interlock Details</strong> aparecerá lo que falta.</li>
+</ol>`,
+    related:['tb-arranque']
+  },
+
+  {
+    id:'tb-coll-mlc',
+    title:'TrueBeam — COLL / MLC (láminas)',
+    tags:['truebeam','coll','mlc','colimador','laminas','gantry','retraer','initialize'],
+    body:`<p><strong>Causas</strong>: láminas no están en la posición planificada, MLC inhabilitado en modo física, fallo de conexión.</p>
+<h3>Procedimiento</h3>
+<ol>
+<li><strong>Clear All</strong>.</li>
+<li>Gantry a <strong>0° o 180°</strong>.</li>
+<li>Entrar a modo servicio.</li>
+<li>Intentar limpiar el error.</li>
+<li>En <strong>MLC → MLC Display</strong> (abajo a la izquierda) → <strong>Retraer</strong>.</li>
+<li>Intentar Clear Interlock de nuevo; si se va, reintentar el tratamiento.</li>
+<li>Si no se quita, probar a inicializar el multiláminas: <strong>MLC → Initialization → Initialize</strong>.</li>
+</ol>
+<div class="warn">⚠ No es recomendado en ningún caso hacer <strong>override</strong> del error.</div>`,
+    related:['tb-arranque','mlc-general']
+  },
+
+  {
+    id:'tb-ipsn',
+    title:'TrueBeam — IPSN (portal mal colocado)',
+    tags:['truebeam','ipsn','portal','kv','mv','selector'],
+    body:`<p>El portal no está colocado en la posición correcta. Solución: en los mandos del TrueBeam, pulsar <strong>selector kV/MV</strong>. Los botones se pondrán en naranja para moverlo a la posición final.</p>`,
+    related:[]
+  },
+
+  {
+    id:'tb-xi',
+    title:'TrueBeam — XI (X Imager)',
+    tags:['xi','x imager','truebeam','imagen','cbct','reboot','network'],
+    body:`<p>Reboot del módulo <strong>XI</strong> en la pestaña <strong>Network</strong> en modo servicio.</p>`,
+    related:['tb-stn']
+  },
+
+  {
+    id:'tb-stn',
+    title:'TrueBeam — Error comunicación STN',
+    tags:['stn','comunicacion','truebeam','network','nodo'],
+    body:`<h3>Procedimiento</h3>
+<ol>
+<li><strong>Clear All</strong>. Si no se va:</li>
+<li>En modo servicio, pestaña <strong>Network</strong>.</li>
+<li><strong>Reboot del nodo STN</strong>. Cuenta atrás de 12 minutos.</li>
+<li>Después reiniciar las cosas mecánicas: regla <strong>MCAP</strong>.</li>
+</ol>`,
+    related:['bam-mcap','tb-spv']
+  },
+
+  {
+    id:'tb-spv',
+    title:'TrueBeam — Error SPV',
+    tags:['spv','supervisor','truebeam','power cycle','network','nodo'],
+    body:`<h3>Procedimiento</h3>
+<ol>
+<li><strong>Clear All</strong>. Si no se va:</li>
+<li>En modo servicio, pestaña <strong>Network</strong>, pulsar <strong>Power Cycle</strong>.</li>
+<li>Intentar Clear Interlock de nuevo.</li>
+<li>Si sigue sin irse, <strong>Reboot del nodo SPV</strong> en modo servicio.</li>
+<li>Después reiniciar las cosas mecánicas: regla <strong>MCAP</strong>.</li>
+</ol>`,
+    related:['bam-mcap','tb-stn']
+  },
+
+  // ──────────── DHX ────────────
+  {
+    id:'dhx-hvcb',
+    title:'DHX — Interlock HVCB',
+    tags:['dhx','hvcb','interlock','alta tension','palanca','clinac','hvps'],
+    body:`<p>Interlock del <strong>HVCB</strong> (High Voltage Circuit Breaker), sistema de alta tensión (HVPS).</p>
+<h3>Procedimiento</h3>
+<ol>
+<li>Identificar en la consola el interlock del DHX.</li>
+<li>Localizar que el origen corresponde al <strong>HVCB</strong>.</li>
+<li>Acceder al armario del <strong>HVPS</strong> (High Voltage Power Supply).</li>
+<li><strong>Subir la palanca interior</strong> del HVPS para restablecer el circuito.</li>
+<li>Verificar en la consola que el interlock ha desaparecido.</li>
+</ol>`,
+    related:['hvcb','hvoc']
+  },
+
+  {
+    id:'dhx-coll-mlc',
+    title:'DHX — COLL / MLC / consola apagada',
+    tags:['dhx','coll','mlc','consola apagada','hyperterminal','wr','laminas'],
+    body:`<h3>Procedimiento</h3>
+<ul>
+<li><strong>Sin cerrar el paciente</strong>.</li>
+<li>En el <strong>hyperterminal</strong>, escribir <code>wr</code> para inicializar las multiláminas.</li>
+</ul>`,
+    related:['dhx-vac1']
+  },
+
+  {
+    id:'dhx-vac1',
+    title:'DHX — Interlock VAC1',
+    tags:['dhx','vac1','llave','laminas','clinac'],
+    body:`<p>Girar la llave y esperar 2 minutos. Reiniciar láminas.</p>`,
+    related:['dhx-coll-mlc']
+  },
+
+  // ──────────── CYBERKNIFE ────────────
+  {
+    id:'cyberknife',
+    title:'CyberKnife — incidencias comunes',
+    tags:['cyberknife','cyber','too long','colimador','paciente'],
+    body:`<ul>
+<li><strong>Problema "too long"</strong>: Computer → Restart Software.</li>
+<li><strong>No encuentra paciente</strong>: Menú principal → pestaña arriba izquierda → Restart Software.</li>
+<li><strong>Pide posición de partida</strong>: coger el mando y mover manualmente.</li>
+<li><strong>Cambiar colimador</strong>: de forma manual.</li>
+</ul>`,
+    related:[]
+  },
+
+  // ──────────── INTERLOCKS GENERALES ────────────
+  {
+    id:'mlc-general',
+    title:'Interlock MLC (general)',
+    tags:['mlc','laminas','colimador multilaminas','herradura'],
+    body:`<p>Ver procedimientos específicos del equipo:</p>
+<ul>
+<li><strong>TrueBeam</strong>: ver "TrueBeam — COLL / MLC".</li>
+<li><strong>DHX</strong>: ver "DHX — COLL / MLC / consola apagada".</li>
+</ul>`,
+    related:['tb-coll-mlc','dhx-coll-mlc']
+  },
+
+  {
+    id:'hwfa',
+    title:'HWFA (Hardware Fault)',
+    tags:['hwfa','hardware','voltaje','potenciometros','fallo'],
+    body:`<p><strong>Causas</strong>: fallo menor de hardware — lectura incorrecta de voltaje, desajuste de potenciómetros en gantry/mandíbulas/colimador/mesa, fallo de activación del haz, MLC no inicializado.</p>
+<h3>Solución</h3>
+<ul>
+<li>Limpiar / según el tipo de elemento físico / modo servicio / mover los elementos (o desde dentro) / cargar un disparo.</li>
+<li>Consultar Event Logs (Morning Checkout Logs / Dynamic Treatment Logs / Event Logs).</li>
+</ul>`,
+    related:['cchl']
+  },
+
+  {
+    id:'bgm',
+    title:'BGM (Beam Generation Module)',
+    tags:['bgm','beam','generation','haz','egn','mod','rfsps','pwm','pos','carrusel'],
+    body:`<p><strong>Causas</strong>: fallos en <strong>EGN</strong> (cañón de electrones), <strong>MOD</strong>, <strong>RFSPS</strong> (potencia a bending magnet, target, carrousel, ion chamber), <strong>POS</strong> (target, carrousel), <strong>PWM</strong> (bobinas que dirigen el haz).</p>
+<h3>Solución</h3>
+<ul>
+<li>Limpiar / modo servicio / limpiar / cargar un disparo / mover el carrusel.</li>
+<li>Modo servicio: <strong>Network → Beam (BGM): Power Cycle</strong>.</li>
+</ul>`,
+    related:['halcyon-bgm']
+  },
+
+  {
+    id:'carr',
+    title:'CARR (Carousel)',
+    tags:['carr','carrusel','carrousel','carousel'],
+    body:`<p><strong>Causas</strong>: carrusel no está en posición para el modo seleccionado; fallo de comunicación consola-controlador.</p>
+<h3>Solución</h3>
+<p>Limpiar → modo servicio → cargar un disparo → mover el carrusel → inicializar carrusel.</p>`,
+    related:['foil']
+  },
+
+  {
+    id:'bmag',
+    title:'BMAG (Bending Magnet)',
+    tags:['bmag','bending','magnet','iman','voltaje','corriente','dmi','imagen'],
+    body:`<p><strong>Causas</strong>: variación de voltaje/corriente excesiva, disyuntor de alimentación BMAG desconectado, temperatura del agua inadecuada, cortocircuito en bobinas.</p>
+<h3>DMI not initialized (problema de imagen)</h3>
+<p>Supervisor SPV → Reboot → Power Cycle → pulsar encendido → esperar <strong>time delay 4 min</strong>.</p>
+<h3>Dentro del modulador</h3>
+<p>Comprobar luz verde y fusibles; interruptor HVPS: iniciar → apagar → iniciar.</p>
+<p><strong>Último recurso</strong>: SETA e iniciar la máquina; verificar interruptor verde del panel externo.</p>`,
+    related:['hvcb']
+  },
+
+  {
+    id:'stn',
+    title:'STN (Stand)',
+    tags:['stn','stand','refrigeracion','sf6','gantry','conexion','bmca','bmac'],
+    body:`<p>Controla y monitoriza refrigeración, SF6, posición del gantry, distribución de potencia, interfaces con consola.</p>
+<p><strong>Causas</strong>: falta de conexión o elemento físico fuera de posición.</p>
+<h3>Solución general</h3>
+<p>Modo servicio → limpiar → comprobar elementos físicos → <strong>Stand (STN) Reboot</strong> → esperar time delay → reinicio BMCA uno a uno.</p>
+<h3>Halcyon STN</h3>
+<ul>
+<li>Detector del chasis → <strong>apretar puerta del gantry</strong>.</li>
+<li>"Láser apagado" → quitar standby.</li>
+<li>Reinicio <strong>BAM</strong> con Axis desde pantalla táctil de dentro.</li>
+</ul>`,
+    related:['halcyon-stn','tb-stn']
+  },
+
+  {
+    id:'cchl',
+    title:'CCHL / CCHU (Couch axes)',
+    tags:['cchl','cchu','mesa','couch','camilla','rotacion','vertical'],
+    body:`<p>Controla los ejes de rotación y vertical de la mesa.</p>
+<h3>Solución</h3>
+<ul>
+<li>Limpiar → mover la mesa desde dentro o en modo servicio → resetear modo CCHL/CCHU.</li>
+<li>Mover → Axis → Couch → Initialize → Power Cycle.</li>
+<li>En Clinac puede aparecer como HWFA.</li>
+</ul>`,
+    related:['hwfa']
+  },
+
+  {
+    id:'udr',
+    title:'UDR1 / UDR2 / UDRS (Cámaras monitoras)',
+    tags:['udr','udrs','udr1','udr2','camara','dosis','tasa','afc','filamento'],
+    body:`<p><strong>Causas</strong>: cámaras monitoras con fallo o tasa de dosis baja. AFC fuera de sintonía.</p>
+<h3>Solución</h3>
+<ul>
+<li>Disparar desde modo servicio a varios ángulos.</li>
+<li>En Clinac: el filamento puede no estar caliente.</li>
+<li>Modulador: luz verde y fusibles; interruptor HVPS: iniciar → apagar → iniciar.</li>
+<li><strong>Último recurso</strong>: SETA e iniciar.</li>
+</ul>`,
+    related:['hvcb']
+  },
+
+  {
+    id:'cdos',
+    title:'CDOS (External Dosimetry Interlock)',
+    tags:['cdos','dosimetria','bloqueo externo','llave'],
+    body:`<p><strong>Causa</strong>: desconexión del bloqueo externo de dosimetría definido.</p>
+<h3>Solución</h3>
+<ul>
+<li>Modo servicio: Clear.</li>
+<li>Si no: girar la llave (clinac) on-off-on (5 segundos).</li>
+</ul>
+<h3>Último recurso Clinac</h3>
+<p>Apagar terminal VARIAN → girar llave off → SETA → botón verde del modulador → girar llave on → encender.</p>
+<h3>Último recurso TrueBeam</h3>
+<p>Apagar ordenador → SETA → botón verde del modulador → fusibles arriba → botón externo verde → iniciar.</p>`,
+    related:['hvcb']
+  },
+
+  {
+    id:'asol-ksol',
+    title:'ASOL / KSOL (Solenoid)',
+    tags:['asol','ksol','solenoide','klystron','potencia'],
+    body:`<p><strong>Causas</strong>: potencia de klystron baja (corriente del solenoide baja o voltaje &lt; 10% nominal).</p>
+<p><strong>ASOL</strong>: 90% fuente no funciona, 10% fallo de conexión.</p>
+<h3>Solución</h3>
+<p>Probar tratamiento de nuevo → modo servicio + cargar un disparo → resetear RFSPS.</p>
+<h3>KSOL último recurso</h3>
+<p>SETA → botón verde del modulador → comprobar fusibles → botón externo verde o caja de fusibles clinac.</p>`,
+    related:['kfil']
+  },
+
+  {
+    id:'kfil',
+    title:'KFIL (Klystron Filament)',
+    tags:['kfil','klystron','filamento','line 1'],
+    body:`<p><strong>Causas</strong>: potencia de klystron igual o inferior al nominal, o klystron defectuoso.</p>
+<p><em>Experimentalmente</em>: Clinac se apagó → Primary Power Distribution fusible <strong>line 1</strong> saltó.</p>
+<h3>Solución</h3>
+<p>Probar de nuevo → modo servicio y disparo → <strong>SETA</strong>: botón verde modulador, fusibles arriba, botón externo verde.</p>`,
+    related:['asol-ksol']
+  },
+
+  {
+    id:'pndt',
+    title:'PNDT (Pendant)',
+    tags:['pndt','pendant','mando','colgante','frenos','camilla','obi'],
+    body:`<p><strong>Causas</strong>: mando colgante no en posición, frenos de camilla no bloqueados, OBI en off, microprocesador sensible a radiación.</p>
+<h3>Solución</h3>
+<p>Colocar el mando → bloquear movimiento manual de mesa → encender OBI desde panel → reiniciar OBI desde dentro.</p>`,
+    related:[]
+  },
+
+  {
+    id:'foil',
+    title:'FOIL (Scattering Foil)',
+    tags:['foil','lamina dispersora','pasador','bloqueo'],
+    body:`<p><strong>Causas</strong>: pasador de bloqueo del carrusel fuera de posición, sensores mal alineados o defectuosos.</p>
+<h3>Solución</h3>
+<p>Modo servicio → Clear → cargar disparo a diferentes energías → inicializar carrusel.</p>`,
+    related:['carr']
+  },
+
+  {
+    id:'ext',
+    title:'EXT (External)',
+    tags:['ext','externo','bolus','portal','pndt'],
+    body:`<p><strong>Causa</strong>: elemento externo (portal, PNDT, MLC, bolus) comunicando problemas.</p>
+<h3>Solución</h3>
+<ul>
+<li>Verificar si existe bolus: clickear pestaña bolus en consola y continuar.</li>
+<li>Si está ligado al MLC: proceder como procedimiento MLC.</li>
+</ul>`,
+    related:['mlc-general']
+  },
+
+  {
+    id:'hvoc',
+    title:'HVOC (High Voltage Over Current)',
+    tags:['hvoc','alta tension','corriente','klystron','magnetron'],
+    body:`<p><strong>Causa</strong>: corriente elevada en el suministrador del klystron o magnetrón.</p>
+<h3>Solución</h3>
+<ul>
+<li>Reiniciar el modulador: pulsar luz verde, fusibles arriba, iniciar como diaria.</li>
+<li>Interruptor HVPS: iniciar → apagar → iniciar.</li>
+<li><strong>Último recurso</strong>: SETA e iniciar (ver UDRS).</li>
+</ul>`,
+    related:['hvcb','udr']
+  },
+
+  {
+    id:'hvcb',
+    title:'HVCB / CB1 / HVPS',
+    tags:['hvcb','cb1','hvps','alta tension','disyuntor','fusible','modulador'],
+    body:`<p><strong>Causas</strong>: disyuntor de alta tensión desconectado, puertas del gabinete del modulador abiertas, fusible saltado.</p>
+<h3>Solución</h3>
+<ul>
+<li>Botón verde / fusibles arriba dentro del modulador y fuera de sala.</li>
+<li>Interruptor HVPS: iniciar → apagar → iniciar.</li>
+<li><strong>DHX específico</strong>: subir la palanca interior del HVPS.</li>
+<li><strong>Último recurso</strong>: SETA e iniciar.</li>
+</ul>`,
+    related:['dhx-hvcb','hvoc']
+  },
+
+  {
+    id:'ds12',
+    title:'DS12',
+    tags:['ds12','um1','um2','tolerancia','desincronizacion'],
+    body:`<p><strong>Causas</strong>: lecturas UM1 y UM2 fuera de tolerancia (5% o 1 UM entre sí). Desincronización de tiempos o bloqueo de pantalla.</p>
+<h3>Solución</h3>
+<ul>
+<li>Cerrar e iniciar el tratamiento.</li>
+<li>Para desincronización: pulsar <code>3 2 1 0 + enter</code> e iniciar programa Treatment y OBI (clinac).</li>
+</ul>`,
+    related:['cdos']
+  },
+
+  {
+    id:'tdly-sqrt',
+    title:'TDLY / SQRT / CMNR / CNF / CLNG',
+    tags:['tdly','sqrt','surt','cmnr','cnf','clng','time delay','trampolin','puerta'],
+    body:`<h3>TDLY — Time Delay</h3>
+<p>Modo servicio: Clear All. Si persiste, disparo de prueba.</p>
+<h3>SQRT / SURT — Mesa efecto trampolín</h3>
+<p>Por peso del paciente. Colocar al paciente hacia el centro de mesa y retirar la misma.</p>
+<h3>CMNR — Bloqueo externo</h3>
+<p>Ej. puerta. Corregir la situación: cerrar la puerta.</p>
+<h3>CNF</h3>
+<p>Controlador no recibió datos de configuración desde consola. Programar de nuevo el tratamiento y activar el haz.</p>
+<h3>CLNG</h3>
+<p>Error en posicionamiento lateral de camilla. Posición fuera de rango. Retirar camilla respecto al gantry y colocar paciente más cerca.</p>`,
+    related:['cchl']
+  },
+
+  {
+    id:'rvbp-ipsn',
+    title:'RVBP / IPSN',
+    tags:['rvbp','ipsn','parametros','plan','posicion','gantry'],
+    body:`<h3>RVBP</h3>
+<p>Parámetros del haz del plan RV difieren del ajuste real.</p>
+<h3>IPSN</h3>
+<p>Parámetros de posición no concuerdan (gantry fuera de 0.2°, etc.).</p>
+<h3>Solución</h3>
+<p>Verificar parámetros y reintentar tratamiento.</p>`,
+    related:['tb-ipsn']
+  },
+
+  {
+    id:'dspn',
+    title:'DSPN',
+    tags:['dspn','elemento fisico','laserguard','laminas','gantry'],
+    body:`<p><strong>Causas</strong>: elemento físico fuera de posición (láminas, gantry, LaserGuard).</p>
+<h3>Solución</h3>
+<p>Corregir elementos físicos y reintentar.</p>`,
+    related:[]
+  },
+
+  {
+    id:'exqt',
+    title:'EXQ1 / EXQ2 / EXQT (Simetría)',
+    tags:['exq1','exq2','exqt','simetria','radial','transversal'],
+    body:`<p><strong>Causas</strong>: simetría de haz radial o transversal fuera de tolerancia (2%).</p>
+<h3>Solución</h3>
+<p>Reintentar. Si persiste, calibrar la simetría.</p>`,
+    related:[]
+  },
+
+  {
+    id:'gas',
+    title:'GAS',
+    tags:['gas','sf6','dielectrico','presion','fuga'],
+    body:`<p><strong>Causas</strong>: presión de SF6 menor de 30 Psi, fuga en guía de ondas.</p>
+<h3>Solución</h3>
+<p>Ajustar el gas o cambiarlo. Experimentalmente: "darle un poco".</p>`,
+    related:[]
+  },
+
+  {
+    id:'gfil',
+    title:'GFIL (Gun Filament)',
+    tags:['gfil','filamento','canon','gun','polarizacion'],
+    body:`<p><strong>Causas</strong>: tensión del filamento baja para la pistola aceleradora, voltaje de polarización bajo.</p>
+<h3>Solución</h3>
+<p>Reintentar tratamiento.</p>`,
+    related:['kfil']
+  },
+
+  {
+    id:'targ',
+    title:'TARG (Target)',
+    tags:['targ','target','proximidad','air','aire'],
+    body:`<p><strong>Causas</strong>: target no en posición correcta, interruptores de proximidad desalineados. Si va con <strong>AIR</strong>: no hay presión de aire.</p>
+<h3>Solución</h3>
+<p>Reintentar. Si persiste, probar con otra energía.</p>`,
+    related:[]
+  },
+
+  {
+    id:'flow',
+    title:'FLOW',
+    tags:['flow','agua','refrigeracion','fuga','nivel','klystron'],
+    body:`<p><strong>Causas</strong>: flujo de agua insuficiente, bajo nivel, fuga, nivel aceite klystron.</p>
+<h3>Solución</h3>
+<p>Mirar nivel de agua, llenar si es bajo.</p>`,
+    related:['pump']
+  },
+
+  {
+    id:'pump',
+    title:'PUMP',
+    tags:['pump','bomba','agua','temperatura','tanque'],
+    body:`<p><strong>Causas</strong>: tanque de agua bajo, bomba cerrada, temperatura excede 48±2°C.</p>
+<h3>Solución</h3>
+<p>Limpiar, asegurar temperatura y presión, mirar nivel del tanque.</p>`,
+    related:['flow']
+  },
+
+  {
+    id:'dos2',
+    title:'DOS2',
+    tags:['dos2','canal dosimetrico','um','mu'],
+    body:`<p><strong>Causas</strong>: UM en canal dosimétrico secundario &gt;10% o 25 MU mayor que dosis establecida.</p>
+<h3>Solución</h3>
+<p>Apagar ordenador y contactar con personal cualificado.</p>`,
+    related:[]
+  },
+
+  {
+    id:'ctrl',
+    title:'CTRL',
+    tags:['ctrl','control','condicion anormal','f2','standby'],
+    body:`<p><strong>Causas</strong>: el ordenador de control detectó una condición anormal.</p>
+<h3>Solución</h3>
+<ul>
+<li>Pulsar <strong>F2</strong> con la tecla de encendido en posición de apagado (TB: standby; Clinac: llave en off).</li>
+<li>Último recurso: SETA.</li>
+</ul>`,
+    related:[]
+  },
+
+  {
+    id:'collision',
+    title:'Pat-Mach-Protection (colisión detectada)',
+    tags:['colision','pat','mach','protection','choque'],
+    body:`<p><strong>Causa</strong>: colisión detectada por el dispositivo de protección.</p>
+<h3>Solución</h3>
+<ul>
+<li>Comprobar que no hay colisión real.</li>
+<li>Pulsar las luces del botón de reinicio.</li>
+<li>Reiniciar el ordenador de la consola.</li>
+</ul>`,
+    related:[]
+  },
+
+  // ──────────── OTRAS ────────────
+  {
+    id:'tube-init',
+    title:'Tube Initialization',
+    tags:['tube','initialization','obi','apagado'],
+    body:`<p>OBI apagado. Solución: pulsar <strong>On</strong> en el panel del OBI.</p>`,
+    related:[]
+  },
+
+  {
+    id:'puertas-sensores',
+    title:'Puertas / sensores',
+    tags:['puerta','sensores','laser','mecanicos'],
+    body:`<p>Tocar los sensores láser y mecánicos para desbloquear la puerta.</p>`,
+    related:['halcyon-door']
+  },
+
+  {
+    id:'campos-invalidos',
+    title:'Campos inválidos (no carga paciente)',
+    tags:['campos invalidos','paciente no carga'],
+    body:`<p>No se carga el campo del paciente.</p>
+<ul>
+<li>Probar cambiando de acelerador.</li>
+<li>Si no, llamar a Varian (902 102 304).</li>
+</ul>`,
+    related:['varian-telefono']
+  },
+
+  {
+    id:'camara-seguridad',
+    title:'Cámara de seguridad no se ve (TrueBeam)',
+    tags:['camara','seguridad','truebeam','video','monitor'],
+    body:`<p>Menú principal → Resetear (Reiniciar).</p>`,
+    related:[]
+  },
+
+  {
+    id:'mpc',
+    title:'MPC (Machine Performance Check)',
+    tags:['mpc','machine performance','chequeo','primer paciente'],
+    body:`<p>El <strong>MPC</strong> es obligatorio antes de tratar al primer paciente después de:</p>
+<ul>
+<li>Reinicio tras seta o apagón.</li>
+<li>Cualquier intervención técnica.</li>
+<li>Cambio de pieza o calibración.</li>
+</ul>
+<p>Desde el menú principal → seleccionar <strong>MPC</strong>.</p>
+<div class="warn">⚠ En el Halcyon, si no se hace MPC no te dejará tratar.</div>`,
+    related:['halcyon-arranque','tb-arranque']
+  },
+
+  {
+    id:'varian-telefono',
+    title:'Teléfono de Varian',
+    tags:['varian','telefono','contacto','tecnico','soporte'],
+    body:`<p>Teléfono de Varian: <strong>902 102 304</strong></p>
+<p>Contactar con servicio técnico cuando:</p>
+<ul>
+<li>La incidencia no se resuelve con los procedimientos locales.</li>
+<li>Se sospecha fallo de hardware.</li>
+<li>Es necesaria intervención presencial.</li>
+<li>Paciente bloqueado tras usar <code>Ctrl+Alt+Shift+R</code>: Varian desbloquea y recupera datos.</li>
+</ul>`,
+    related:['ctrl-alt-shift-r']
+  }
+];
+
+// ═══════════ SEARCH ═══════════
+
+function normalize(s) {
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^\w\s]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+function tokenize(s) {
+  const STOP = new Set(['el','la','los','las','un','una','unos','unas','de','del','y','o','a','en','que','se','es','me','mi','tu','con','por','para','al','no','si','lo','su','pero','sobre','este','esta','como','cuando','donde','hay','ya','da','ir','veo','tengo','tiene','hoy','ahora']);
+  return normalize(s).split(' ').filter(w => w.length > 1 && !STOP.has(w));
+}
+
+function scoreEntry(entry, query) {
+  const qTokens = tokenize(query);
+  const qNorm = normalize(query);
+  if (qTokens.length === 0) return 0;
+  let score = 0;
+  const titleNorm = normalize(entry.title);
+  const tagsNorm = entry.tags.map(normalize);
+  const bodyNorm = normalize(entry.body.replace(/<[^>]+>/g,' '));
+  for (const t of qTokens) {
+    if (tagsNorm.some(tag => tag === t)) score += 12;
+    else if (tagsNorm.some(tag => tag.includes(t) || t.includes(tag))) score += 8;
+    if (titleNorm.includes(t)) score += 5;
+    if (bodyNorm.includes(t)) score += 1;
+  }
+  if (titleNorm.includes(qNorm)) score += 10;
+  if (tagsNorm.some(tag => tag.includes(qNorm))) score += 8;
+  return score;
+}
+
+function search(query) {
+  return KB
+    .map(e => ({ entry: e, score: scoreEntry(e, query) }))
+    .filter(r => r.score > 0)
+    .sort((a,b) => b.score - a.score);
+}
+
+// ═══════════ UI ═══════════
+
+const messagesEl = document.getElementById('messages');
+const inputEl = document.getElementById('input');
+
+function addMsg(role, html) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.innerHTML = html;
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return div;
+}
+
+function autoGrow(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    send();
+  }
+}
+
+function sendQuick(btn) {
+  inputEl.value = btn.textContent;
+  send();
+}
+
+function escapeHTML(s) {
+  return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+}
+
+function buildAnswer(results, query) {
+  if (results.length === 0) {
+    return `No he encontrado ninguna entrada que coincida con "<em>${escapeHTML(query)}</em>".<br><br>
+      <strong>Sugerencias</strong>:
+      <ul>
+        <li>Prueba con el nombre exacto del interlock (BGM, MLC, HVCB, XI, STN, SPV...).</li>
+        <li>O con el síntoma ("apagado", "seta", "palanca", "pantalla azul").</li>
+        <li>O el equipo (Halcyon, TrueBeam, DHX, CyberKnife).</li>
+      </ul>
+      Si la incidencia no aparece contemplada, contacta con Varian: <strong>902 102 304</strong>.`;
+  }
+
+  const top = results[0].entry;
+  const others = results.slice(1, 5).map(r => r.entry);
+
+  let html = `<h3>${escapeHTML(top.title)}</h3>${top.body}`;
+
+  const related = (top.related || [])
+    .map(id => KB.find(e => e.id === id))
+    .filter(Boolean);
+  const seen = new Set([top.id, ...related.map(e => e.id)]);
+  const extras = others.filter(e => !seen.has(e.id)).slice(0, 3);
+  const suggestions = [...related, ...extras];
+
+  if (suggestions.length > 0) {
+    html += `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+      <div style="font-size:12px;color:var(--text3);margin-bottom:6px">Temas relacionados:</div>`;
+    for (const s of suggestions) {
+      html += `<span class="suggest" onclick="sendQuick(this)">${escapeHTML(s.title)}</span>`;
+    }
+    html += `</div>`;
+  }
+  return html;
+}
+
+function send() {
+  const text = inputEl.value.trim();
+  if (!text) return;
+  inputEl.value = '';
+  inputEl.style.height = 'auto';
+  addMsg('user', escapeHTML(text));
+  setTimeout(() => {
+    const results = search(text);
+    const answer = buildAnswer(results, text);
+    addMsg('assistant', answer);
+    inputEl.focus();
+  }, 150);
+}
+</script>
+</body>
+</html>
